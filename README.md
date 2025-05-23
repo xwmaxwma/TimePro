@@ -2,6 +2,7 @@
 <h1>TimePro </h1>
 <h3>TimePro: Efficient Multivariate Long-term Time Series Forecasting with
 Variable- and Time-Aware Hyper-state</h3>
+ 
 [Xiaowen Ma](https://scholar.google.com/citations?hl=zh-CN&user=UXj8Q6kAAAAJ)<sup>1</sup>, Zhenliang Ni<sup>1</sup>, Shuai Xiao, Xinghao Chen<sup>1</sup>
 
 <sup>1</sup> Huawei Noah’s Ark Lab
