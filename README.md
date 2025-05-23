@@ -42,7 +42,8 @@ Variable- and Time-Aware Hyper-state</h3>
   pip install -r requirements.txt
   ```
 
-  
+- Dataset
+  The dataset can be download at [this](https://github.com/xwmaxwma/TimePro/releases/TimePro_dataset.zip)
 
 - Train
 
