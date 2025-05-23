@@ -43,7 +43,8 @@ Variable- and Time-Aware Hyper-state</h3>
   ```
 
 - Dataset
-  The dataset can be download at [this](https://github.com/xwmaxwma/TimePro/releases/TimePro_dataset.zip)
+
+  The dataset can be download at this [link](https://github.com/xwmaxwma/TimePro/releases/download/dataset/TimePro_dataset.zip)
 
 - Train
 
