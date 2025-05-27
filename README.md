@@ -12,7 +12,7 @@ Variable- and Time-Aware Hyper-state</h3>
 </div>
 
 ## 🔥 News
-- **`2025/05/24`**: **Code for TimePro is available.**
+- **`2025/05/27`**: **Code for TimePro is available.**
 
 
 
