@@ -37,14 +37,18 @@ Variable- and Time-Aware Hyper-state</h3>
 - Environment
 
   ```shell
-  conda create --name timepro python=3.8 -y
+  conda create --name timepro python=3.9 -y
   conda activate timepro
   pip install -r requirements.txt
+  cd selective_scan && pip install .
   ```
 
 - Dataset
 
   The dataset can be download at this [link](https://github.com/xwmaxwma/TimePro/releases/download/dataset/TimePro_dataset.zip)
+  ```shell
+  ln -s /path/to/TimePro_dataset/ dataset
+  ```
 
 - Train
 
