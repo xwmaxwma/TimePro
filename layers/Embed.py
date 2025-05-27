@@ -1,20 +1,20 @@
-import mindspore
-import mindspore.nn as nn
+import torch
+import torch.nn as nn
 import math
 
-class PositionalEmbedding(nn.Cell):
+class PositionalEmbedding(nn.Module):
     def __init__(self, d_model, max_len=5000):
         super(PositionalEmbedding, self).__init__()
         # Compute the positional encodings once in log space.
-        pe = mindspore.zeros(max_len, d_model).float()
+        pe = torch.zeros(max_len, d_model).float()
         pe.require_grad = False
 
-        position = mindspore.arange(0, max_len).float().unsqueeze(1)
-        div_term = (mindspore.arange(0, d_model, 2).float()
+        position = torch.arange(0, max_len).float().unsqueeze(1)
+        div_term = (torch.arange(0, d_model, 2).float()
                     * -(math.log(10000.0) / d_model)).exp()
 
-        pe[:, 0::2] = mindspore.sin(position * div_term)
-        pe[:, 1::2] = mindspore.cos(position * div_term)
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
 
         pe = pe.unsqueeze(0)
         self.register_buffer('pe', pe)
@@ -23,13 +23,13 @@ class PositionalEmbedding(nn.Cell):
         return self.pe[:, :x.size(1)]
 
 
-class TokenEmbedding(nn.Cell):
+class TokenEmbedding(nn.Module):
     def __init__(self, c_in, d_model):
         super(TokenEmbedding, self).__init__()
-        padding = 1 if mindspore.__version__ >= '1.5.0' else 2
+        padding = 1 if torch.__version__ >= '1.5.0' else 2
         self.tokenConv = nn.Conv1d(in_channels=c_in, out_channels=d_model,
                                    kernel_size=3, padding=padding, padding_mode='circular', bias=False)
-        for m in self.Cells():
+        for m in self.Modules():
             if isinstance(m, nn.Conv1d):
                 nn.init.kaiming_normal_(
                     m.weight, mode='fan_in', nonlinearity='leaky_relu')
@@ -39,19 +39,19 @@ class TokenEmbedding(nn.Cell):
         return x
 
 
-class FixedEmbedding(nn.Cell):
+class FixedEmbedding(nn.Module):
     def __init__(self, c_in, d_model):
         super(FixedEmbedding, self).__init__()
 
-        w = mindspore.zeros(c_in, d_model).float()
+        w = torch.zeros(c_in, d_model).float()
         w.require_grad = False
 
-        position = mindspore.arange(0, c_in).float().unsqueeze(1)
-        div_term = (mindspore.arange(0, d_model, 2).float()
+        position = torch.arange(0, c_in).float().unsqueeze(1)
+        div_term = (torch.arange(0, d_model, 2).float()
                     * -(math.log(10000.0) / d_model)).exp()
 
-        w[:, 0::2] = mindspore.sin(position * div_term)
-        w[:, 1::2] = mindspore.cos(position * div_term)
+        w[:, 0::2] = torch.sin(position * div_term)
+        w[:, 1::2] = torch.cos(position * div_term)
 
         self.emb = nn.Embedding(c_in, d_model)
         self.emb.weight = nn.Parameter(w, requires_grad=False)
@@ -60,7 +60,7 @@ class FixedEmbedding(nn.Cell):
         return self.emb(x).detach()
 
 
-class TemporalEmbedding(nn.Cell):
+class TemporalEmbedding(nn.Module):
     def __init__(self, d_model, embed_type='fixed', freq='h'):
         super(TemporalEmbedding, self).__init__()
 
@@ -90,7 +90,7 @@ class TemporalEmbedding(nn.Cell):
         return hour_x + weekday_x + day_x + month_x + minute_x
 
 
-class TimeFeatureEmbedding(nn.Cell):
+class TimeFeatureEmbedding(nn.Module):
     def __init__(self, d_model, embed_type='timeF', freq='h'):
         super(TimeFeatureEmbedding, self).__init__()
 
@@ -103,7 +103,7 @@ class TimeFeatureEmbedding(nn.Cell):
         return self.embed(x)
 
 
-class DataEmbedding(nn.Cell):
+class DataEmbedding(nn.Module):
     def __init__(self, c_in, d_model, embed_type='fixed', freq='h', dropout=0.1):
         super(DataEmbedding, self).__init__()
 
@@ -122,7 +122,7 @@ class DataEmbedding(nn.Cell):
                 x) + self.temporal_embedding(x_mark) + self.position_embedding(x)
         return self.dropout(x)
 
-class moving_avg(nn.Cell):
+class moving_avg(nn.Module):
     """
     Moving average block to highlight the trend of time series
     """
@@ -135,13 +135,13 @@ class moving_avg(nn.Cell):
         # padding on the both ends of time series
         front = x[:, 0:1, :].repeat(1, (self.kernel_size - 1) // 2, 1)
         end = x[:, -1:, :].repeat(1, (self.kernel_size - 1) // 2, 1)
-        x = mindspore.cat([front, x, end], dim=1)
+        x = torch.cat([front, x, end], dim=1)
         x = self.avg(x.permute(0, 2, 1))
         x = x.permute(0, 2, 1)
         return x
 
 
-class series_decomp(nn.Cell):
+class series_decomp(nn.Module):
     """
     Series decomposition block
     """
@@ -153,7 +153,7 @@ class series_decomp(nn.Cell):
         moving_mean = self.moving_avg(x)
         res = x - moving_mean
         return res, moving_mean
-class DataEmbedding_wo_pos(nn.Cell):
+class DataEmbedding_wo_pos(nn.Module):
     def __init__(self, c_in, d_model, embed_type='fixed', freq='h', dropout=0.1):
         super(DataEmbedding_wo_pos, self).__init__()
 
@@ -170,7 +170,7 @@ class DataEmbedding_wo_pos(nn.Cell):
         else:
             x = self.value_embedding(x) + self.temporal_embedding(x_mark)
         return self.dropout(x)
-class DataEmbedding_inverted(nn.Cell):
+class DataEmbedding_inverted(nn.Module):
     def __init__(self, c_in, d_model, embed_type='fixed', freq='h', dropout=0.1):
         super(DataEmbedding_inverted, self).__init__()
         self.value_embedding = nn.Linear(c_in, d_model)
@@ -184,10 +184,10 @@ class DataEmbedding_inverted(nn.Cell):
 
             x = self.value_embedding(x)
         else:
-            x = self.value_embedding(mindspore.cat([x, x_mark.permute(0, 2, 1)], 1))
+            x = self.value_embedding(torch.cat([x, x_mark.permute(0, 2, 1)], 1))
         return self.dropout(x)
 
-class PatchEmbedding(nn.Cell):
+class PatchEmbedding(nn.Module):
     def __init__(self, d_model, patch_len, stride, padding=0, dropout=0):
         super(PatchEmbedding, self).__init__()
         # Patching
@@ -209,7 +209,7 @@ class PatchEmbedding(nn.Cell):
         n_vars = x.shape[1]
         x = self.padding_patch_layer(x)
         x = x.unfold(dimension=-1, size=self.patch_len, step=self.stride)
-        x = mindspore.reshape(x, (x.shape[0] * x.shape[1], x.shape[2], x.shape[3]))
+        x = torch.reshape(x, (x.shape[0] * x.shape[1], x.shape[2], x.shape[3]))
         # Input encoding
         x = self.value_embedding(x) # + self.position_embedding(x)
         return self.dropout(x), n_vars

@@ -1,5 +1,5 @@
 import argparse
-import mindspore
+import torch
 from experiments.exp_long_term_forecasting import Exp_Long_Term_Forecast
 from experiments.exp_long_term_forecasting_partial import Exp_Long_Term_Forecast_Partial
 import random
@@ -8,10 +8,10 @@ import numpy as np
 if __name__ == '__main__':
     fix_seed = 2023
     random.seed(fix_seed)
-    mindspore.manual_seed(fix_seed)
+    torch.manual_seed(fix_seed)
     np.random.seed(fix_seed)
 
-    parser = argparse.ArgumentParser(description='iTransformer')
+    parser = argparse.ArgumentParser(description='TimePro')
 
     # basic config
     parser.add_argument('--is_training', type=int, required=True, default=1, help='status')
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     parser.add_argument('--stride', type=int, default=6, help='patch stride')
 
     args = parser.parse_args()
-    args.use_gpu = True if mindspore.cuda.is_available() and args.use_gpu else False
+    args.use_gpu = True if torch.cuda.is_available() and args.use_gpu else False
 
     if args.use_gpu and args.use_multi_gpu:
         args.devices = args.devices.replace(' ', '')
@@ -106,9 +106,9 @@ if __name__ == '__main__':
         Exp = Exp_Long_Term_Forecast_Partial
     else: # MTSF: multivariate time series forecasting
         Exp = Exp_Long_Term_Forecast
-    import mindspore.multiprocessing
+    import torch.multiprocessing
 
-    mindspore.multiprocessing.set_sharing_strategy('file_system')
+    torch.multiprocessing.set_sharing_strategy('file_system')
 
     if args.is_training==1:
         for ii in range(args.itr):
@@ -143,7 +143,7 @@ if __name__ == '__main__':
                 print('>>>>>>>predicting : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
                 exp.predict(setting, True)
 
-            mindspore.cuda.empty_cache()
+            torch.cuda.empty_cache()
     elif args.is_training == 2:
         print(11111)
         for ii in range(args.itr):
@@ -192,4 +192,4 @@ if __name__ == '__main__':
         exp = Exp(args)  # set experiments
         print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
         exp.test(setting, test=1)
-        mindspore.cuda.empty_cache()
+        torch.cuda.empty_cache()

@@ -35,6 +35,7 @@ class Exp_Basic(object):
             'Autoformer_M': Autoformer_M,
 
             'S_Mamba': S_Mamba,
+            'TimePro': TimePro
         }
         self.device = self._acquire_device()
         self.model = self._build_model().to(self.device)
