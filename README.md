@@ -7,7 +7,7 @@ Variable- and Time-Aware Hyper-state</h3>
 
 <sup>1</sup> Huawei Noah’s Ark Lab
 
- [[Paper Link](https://arxiv.org/abs/2505.20774)]
+ [[Open Review](https://openreview.net/forum?id=s69Ei2VrIW))] [[Arxiv](https://arxiv.org/abs/2505.20774)]
 
 </div>
 
@@ -70,14 +70,13 @@ Variable- and Time-Aware Hyper-state</h3>
 If you are interested in our work, please consider giving a 🌟 and citing our work below.
 
 ```
-@misc{timepro,
-      title={TimePro: Efficient Multivariate Long-term Time Series Forecasting with Variable- and Time-Aware Hyper-state}, 
-      author={Xiaowen Ma and Zhenliang Ni and Shuai Xiao and Xinghao Chen},
-      year={2025},
-      eprint={2505.20774},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2505.20774}, 
+@inproceedings{
+timepro,
+title={TimePro: Efficient Multivariate Long-term Time Series Forecasting with Variable- and Time-Aware Hyper-state},
+author={Xiaowen Ma and Zhen-Liang Ni and Shuai Xiao and Xinghao Chen},
+booktitle={Forty-second International Conference on Machine Learning},
+year={2025},
+url={https://openreview.net/forum?id=s69Ei2VrIW}
 }
 ```
 
