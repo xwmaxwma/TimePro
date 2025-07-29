@@ -7,7 +7,7 @@ Variable- and Time-Aware Hyper-state</h3>
 
 <sup>1</sup> Huawei Noah’s Ark Lab
 
- [[Open Review](https://openreview.net/forum?id=s69Ei2VrIW))] [[Arxiv](https://arxiv.org/abs/2505.20774)]
+ [[Open Review](https://openreview.net/forum?id=s69Ei2VrIW)] [[Arxiv](https://arxiv.org/abs/2505.20774)]
 
 </div>
 
